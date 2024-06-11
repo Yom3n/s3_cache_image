@@ -2,20 +2,21 @@ library s3_cache_image;
 
 import 'dart:async';
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
+import 'package:path_provider/path_provider.dart';
 
 typedef Future<String> ExpiredURLCallback(String id);
 
 class S3CacheManager {
-  static final S3CacheManager _shared = S3CacheManager._internal();
 
   factory S3CacheManager() {
     return _shared;
   }
 
   S3CacheManager._internal();
+  static final S3CacheManager _shared = S3CacheManager._internal();
 
   final _logger = Logger.detached('S3CacheManager');
   var _path = '/s3/cache/images/';
@@ -53,10 +54,6 @@ class S3CacheManager {
       }
       _downloadUrl = await callback(remoteId);
     }
-    if (_downloadUrl == null) {
-      _logger.warning('No response from expired callback, return null');
-      return null;
-    }
 
     _logger.fine('Valid Url, commencing download for $_downloadUrl');
     return await _downloadFile(_downloadUrl, id);
@@ -72,26 +69,21 @@ class S3CacheManager {
       return null;
     }
 
-    if (response != null) {
-      if (response.statusCode == 200) {
-        final path = await _getPath(id);
-        final folder = File(path).parent;
-        if (!(await folder.exists())) {
-          folder.createSync(recursive: true);
-        }
-        final file = await File(path).writeAsBytes(response.bodyBytes);
-        _logger.fine('Download success and file saved to path $path');
-        return file;
-      } else {
-        _logger
-            .warning('Download failed with status code ${response.statusCode}');
-        return null;
+    if (response.statusCode == 200) {
+      final path = await _getPath(id);
+      final folder = File(path).parent;
+      if (!(await folder.exists())) {
+        folder.createSync(recursive: true);
       }
+      final file = await File(path).writeAsBytes(response.bodyBytes);
+      _logger.fine('Download success and file saved to path $path');
+      return file;
     } else {
-      _logger.warning('No response from server');
+      _logger
+          .warning('Download failed with status code ${response.statusCode}');
       return null;
     }
-  }
+    }
 
   bool _isExpired(String url) {
     final uri = Uri.dataFromString(url);

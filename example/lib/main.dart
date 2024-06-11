@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Return the disk cache directory size.
-  Future<int> getDiskCachedImagesSize() async {
+  Future<int?> getDiskCachedImagesSize() async {
     return getS3CacheSize();
   }
 

@@ -1,6 +1,6 @@
 name: s3_cache_image
 description: Flutter library to load and cache S3 Images. Can also be used with placeholder and error widgets.
-version: 0.0.1
+version: 1.0.0
 author: Daniel Tjuatja<daniel.tjuatja@holmusk.com>
 homepage: https://www.holmusk.com
 

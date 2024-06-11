@@ -2,12 +2,12 @@ library s3_cache_image;
 
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui show instantiateImageCodec, Codec;
 
 import 'package:flutter/foundation.dart';
-import 'package:logging/logging.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
+
 import 'src/s3_cache_manager.dart';
 
 /// s3_cache_image for Flutter
@@ -47,10 +47,7 @@ class S3CachedImage extends StatefulWidget {
     this.width,
     this.height,
     this.fit,
-  })  : assert(imageURL != null),
-        assert(cacheId != null),
-        assert(remoteId != null),
-        super(key: key);
+  })  : super(key: key);
 
   /// The target image URL that is displayed.
   final String imageURL;
@@ -318,7 +315,6 @@ class _S3CachedImageState extends State<S3CachedImage>
   }
 
   bool get _isShowingPlaceholder {
-    assert(_phase != null);
     switch (_phase) {
       case ImagePhase.start:
       case ImagePhase.waiting:
@@ -383,9 +379,7 @@ class S3CachedNetworkImageProvider
     extends ImageProvider<S3CachedNetworkImageProvider> {
   const S3CachedNetworkImageProvider(
       this.url, this.cacheId, this.remoteId, this.callback,
-      {this.scale: 1.0, this.errorListener})
-      : assert(url != null),
-        assert(scale != null);
+      {this.scale = 1.0, this.errorListener});
 
   /// Web url of the image to load
   final String url;
@@ -420,13 +414,14 @@ class S3CachedNetworkImageProvider
       }
       return await _loadAsyncFromFile(key, file);
     }
+    return null;
   }
 
   Future<ui.Codec?> _loadAsyncFromFile(
       S3CachedNetworkImageProvider key, File file) async {
     assert(key == this);
 
-    final Uint8List bytes = await file.readAsBytes();
+    final bytes = await file.readAsBytes();
 
     if (bytes.lengthInBytes == 0) {
       if (errorListener != null) {
