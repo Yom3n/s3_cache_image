@@ -448,7 +448,7 @@ class S3CachedNetworkImageProvider
   String toString() => '$runtimeType(id: $cacheId, url: $url scale: $scale)';
 
   @override
-  ImageStreamCompleter load(S3CachedNetworkImageProvider key, decode) {
+  ImageStreamCompleter loadImage(S3CachedNetworkImageProvider key, decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key).then((value) => value!),
       scale: key.scale,
