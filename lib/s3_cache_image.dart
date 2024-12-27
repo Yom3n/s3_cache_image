@@ -47,7 +47,7 @@ class S3CachedImage extends StatefulWidget {
     this.width,
     this.height,
     this.fit,
-  })  : super(key: key);
+  }) : super(key: key);
 
   /// The target image URL that is displayed.
   final String imageURL;
@@ -442,7 +442,7 @@ class S3CachedNetworkImageProvider
   }
 
   @override
-  int get hashCode => hashValues(url, cacheId, scale);
+  int get hashCode => Object.hash(url, cacheId, scale);
 
   @override
   String toString() => '$runtimeType(id: $cacheId, url: $url scale: $scale)';
